@@ -1,0 +1,34 @@
+#!/bin/bash
+if [ $# -eq 2 ]
+then
+
+# make project dir
+ GROUPID=$( echo $2 | tr '.' '/' )
+ mkdir -p ~/Kod/$1/src/{main,test}/java/$GROUPID
+
+# initilize git repo
+ git init ~/Kod/$1
+
+# change dir to project dir
+ cd ~/Kod/$1
+
+# create .gitignore
+ echo -e "*.class\n.idea/\ntarget/\n*iml" > .gitignore
+
+# create README.md
+ echo -e "# About $1\n## Prerequisites\n## Running\n## What to review?\n" > README.md
+
+# create estymaty.md
+ echo -e "# Nazwa projektu\n\n|Data  |Pesymistyczna|Realistyczna|Optymistyczna|\n:-------------------:|:-------------------:|:-------------------|-------------------:\n|data|opis pesymistyczny|opis realistyczny|opis optymistyczny" > estymaty.md
+
+# download POM.xml
+ wget "https://gist.githubusercontent.com/LIttleAncientForestKami/c9b185c123fc97f6022861f645766aa5/raw/45db276f570fcca357fbcf36b6209517c69c6427/pom.xml"
+
+# replace groupID and artifcatID in pom.xml
+ sed -i "s/pl.lafk/$2/g" ~+/pom.xml
+ sed -i "s/#APP/$1/g" ~+/pom.xml
+ sed -i "s/lafk.pl//g" ~+/pom.xml
+ 
+else
+ echo "You have enter exactly 2 args at startup: ARTIFACTID and GROUPID"
+fi
