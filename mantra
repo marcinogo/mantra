@@ -28,6 +28,8 @@ then
  sed -i "s/pl.lafk/$2/g" ~+/pom.xml
  sed -i "s/#APP/$1/g" ~+/pom.xml
  sed -i "s/lafk.pl//g" ~+/pom.xml
+
+ intellij-idea-community pom.xml &
  
 else
  echo "You have enter exactly 2 args at startup: ARTIFACTID and GROUPID"
