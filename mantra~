@@ -3,21 +3,20 @@ if [[ "$#" -eq 2 ]]
 then
 
 # make project dir structure
- GROUPID=$( echo "$2" | tr '.' '/' )
- ARTIFACTID="$1"
- mkdir -p ~/Kod/$ARTIFACTID/src/{main,test}/{java,resources}/$GROUPID
+ GROUPID=$( echo $2 | tr '.' '/' )
+ mkdir -p ~/Kod/$1/src/{main,test}/{java,resources}/$GROUPID
 
 # initialize git repo
- git init ~/Kod/$ARTIFACTID
+ git init ~/Kod/$1
 
 # change dir to project dir
- cd ~/Kod/$ARTIFACTID
+ cd ~/Kod/$1
 
 # download .gitignore from gitignore.io
  wget "https://gitignore.io/api/java,intellij+iml" -O ".gitignore"
 
 # create README.md
- echo -e "# About $ARTIFACTID\n## Prerequisites\n## Running\n## What to review?\n" > README.md
+ echo -e "# About $1\n## Prerequisites\n## Running\n## What to review?\n" > README.md
 
 # create estymaty.md
 # uncomment to use
@@ -28,9 +27,9 @@ then
  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/6f24eb8ad77a74b05850633675b34b1e009f2567/pom.xml"
 
 # replace groupID and artifactID in pom.xml
- sed -i "s/#GROUPID/$GRUPID/g" ~+/pom.xml
- sed -i "s/#ARTIFACTID/$ARTIFACTID/g" ~+/pom.xml
- sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
+ sed -i "s/#GROUPID/"$2"/g" ~+/pom.xml
+ sed -i "s/#ARTIFACTID/"$1"/g" ~+/pom.xml
+ sed -i "s/#APP_NAME/"$1"/g" ~+/pom.xml
 
 # open intellij community edition (snap) with this project in background
  intellij-idea-community pom.xml &
