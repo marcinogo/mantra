@@ -14,7 +14,7 @@ then
  cd ~/Kod/$ARTIFACTID
 
 # download .gitignore from gitignore.io
- wget "https://gitignore.io/api/java,intellij+iml" -O ".gitignore"
+ wget "https://gitignore.io/api/java,maven,intellij+all" -O ".gitignore"
 
 # create README.md
  echo -e "# About $ARTIFACTID\n## Prerequisites\n## Running\n## What to review?\n" > README.md
