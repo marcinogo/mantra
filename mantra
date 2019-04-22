@@ -28,7 +28,7 @@ then
  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/6f24eb8ad77a74b05850633675b34b1e009f2567/pom.xml"
 
 # replace groupID and artifactID in pom.xml
- sed -i "s/#GROUPID/$GRUPID/g" ~+/pom.xml
+ sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
  sed -i "s/#ARTIFACTID/$ARTIFACTID/g" ~+/pom.xml
  sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
 
