@@ -3,29 +3,33 @@ if [[ "$#" -eq 2 ]]
 then
 
 # make project dir structure
- GROUPID=$( echo "$2" | tr '.' '/' )
+ GROUPID="$2"
+ GROUPID_DIR=$( echo "$GROUPID" | tr '.' '/' )
  ARTIFACTID="$1"
- mkdir -p ~/Kod/$ARTIFACTID/src/{main,test}/{java,resources}/$GROUPID
+ echo "Create project directory"
+ mkdir -p ~/Kod/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR",resources}
 
 # initialize git repo
- git init ~/Kod/$ARTIFACTID
+ git init ~/Kod/"$ARTIFACTID"
 
 # change dir to project dir
- cd ~/Kod/$ARTIFACTID
+cd ~/Kod/"$ARTIFACTID" || ( echo "Can not open $ARTIFACTID directory. Abord operation" && exit 1 )
 
 # download .gitignore from gitignore.io
+ echo "Download .gitignore"
  wget "https://gitignore.io/api/java,maven,intellij+all" -O ".gitignore"
 
-# create README.md
- echo -e "# About $ARTIFACTID\n## Prerequisites\n## Running\n## What to review?\n" > README.md
+# create README.adoc
+ echo -e "= About $ARTIFACTID\n== Prerequisites\n== Running\n== What to review?\n" > README.adoc
 
-# create estymaty.md
+# create estymaty.adoc
 # uncomment to use
-# echo -e "# Nazwa projektu\n\n|Data  |Pesymistyczna|Realistyczna|Optymistyczna|\n:-------------------:|:-------------------:|:-------------------|-------------------:\n|data|opis pesymistyczny|opis realistyczny|opis optymistyczny" > estymaty.md
+# echo -e "# $ARTIFACTID\n\n|Data  |Pesymistyczna|Realistyczna|Optymistyczna|\n:-------------------:|:-------------------:|:-------------------|-------------------:\n|data|opis pesymistyczny|opis realistyczny|opis optymistyczny" > estymaty.md
 
 # download POM.xml from gist.github.com
-# update url after each change of gist
- wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/6f24eb8ad77a74b05850633675b34b1e009f2567/pom.xml"
+# update url in case of change gist
+ echo "Download pom.xml"
+ wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/4d963066dc3d926714856cf4149ecdda9316e848/pom.xml"
 
 # replace groupID and artifactID in pom.xml
  sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
@@ -33,12 +37,15 @@ then
  sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
 
 # open intellij community edition (snap) with this project in background
+ echo "Open IntelliJ"
  intellij-idea-community pom.xml &
 
 # create initial commit
+ echo "Create initial commit"
  git add .
  git commit -m "Initial commit"
  
 else
- echo "You have enter exactly 2 args at startup: ARTIFACTID and GROUPID"
+ echo "You have to enter exactly 2 args at startup: ARTIFACTID and GROUPID"
+ exit 1
 fi
