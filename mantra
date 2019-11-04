@@ -13,7 +13,8 @@ then
  git init ~/Kod/"$ARTIFACTID"
 
 # change dir to project dir
-cd ~/Kod/"$ARTIFACTID" || ( echo "Can not open $ARTIFACTID directory. Abord operation" && exit 1 )
+echo "Try to open $ARTIFACTID directory.
+cd ~/Kod/"$ARTIFACTID" || exit 1
 
 # download .gitignore from gitignore.io
  echo "Download .gitignore"
