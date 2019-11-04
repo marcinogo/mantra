@@ -21,7 +21,7 @@ cd ~/Kod/"$ARTIFACTID" || exit 1
  wget "https://gitignore.io/api/java,maven,intellij+all" -O ".gitignore"
 
 # create README.adoc
- echo -e "= About $ARTIFACTID\n== Prerequisites\n== Running\n== What to review?\n" > README.adoc
+ echo -e "= About $ARTIFACTID\n\n== Prerequisites\n\n== Running\n\n== What to review?\n" > README.adoc
 
 # create estymaty.adoc
 # uncomment to use
