@@ -40,9 +40,6 @@ cd ~/Kod/"$ARTIFACTID" || exit 1
 # open intellij community edition (snap) with this project in background
  echo "Open IntelliJ"
  intellij-idea-community pom.xml &
- 
-# to free terminal
- return
 
 # create initial commit
  echo "Create initial commit"
