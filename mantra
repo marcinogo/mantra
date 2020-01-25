@@ -30,7 +30,7 @@ cd ~/Kod/"$ARTIFACTID" || exit 1
 # download POM.xml from gist.github.com
 # update url in case of change gist
  echo "Download pom.xml"
- wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/6b26e7478fbcb64cd28604b9c97462a204e1557e/pom.xml"
+ wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/d9e6dcee0efdee6ea8bb0650c243619f722915dd/pom.xml"
 
 # replace groupID and artifactID in pom.xml
  sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
