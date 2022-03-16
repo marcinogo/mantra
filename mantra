@@ -3,8 +3,9 @@
 # TODO:
 # 0. update gist with pom.xml and documentation
 # 1. usage
+# 1.5 param for destiantion
 # 2. param for estimates
-# 3. param for remote repo
+# 3. param for remote repo - if tying to GitLab 'git push' creates remote repo
 # 4. minimal pom and .gitignore in case of lack the connection
 # 5. simple Maven project and option for REST with SpringBoot with https://start.spring.io/
 # 6. adjust naming convention
@@ -13,6 +14,11 @@
 # 9. param for project's description
 # 10. better versioning
 # 11. man page
+# 12. docker
+# 13. gitlab-ci
+# 14. maybe interactive version
+# 15. default main and test class
+# 16 run.sh
 
 assigns_input_params() {
   ARTIFACTID="${1:-new-project}"
