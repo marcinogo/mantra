@@ -1,52 +1,119 @@
 #!/bin/bash
-if [[ "$#" -eq 2 ]]
-then
 
-# make project dir structure
- GROUPID="$2"
- GROUPID_DIR=$( echo "$GROUPID" | tr '.' '/' )
- ARTIFACTID="$1"
- echo "Create project directory"
- mkdir -p ~/Kod/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR",resources}
+# TODO:
+# 0. update gist with pom.xml and documentation
+# 1. usage
+# 2. param for estimates
+# 3. param for remote repo
+# 4. minimal pom and .gitignore in case of lack the connection
+# 5. simple Maven project and option for REST with SpringBoot with https://start.spring.io/
+# 6. adjust naming convention
+# 7. sanitizing artifactId and groupId
+# 8. param for URL in pom.xml (maybe connected with point 3)
+# 9. param for project's description
+# 10. better versioning
+# 11. man page
 
-# initialize git repo
- git init ~/Kod/"$ARTIFACTID"
+assigns_input_params() {
+  ARTIFACTID="${1:-new-project}"
+  GROUPID="${2:-com.github.marcinogo}"
+}
+
+parses_input_params() {
+  ARTIFACTID_DIR=$(echo "$ARTIFACTID" | tr -d '-')
+  GROUPID_DIR=$(echo "$GROUPID" | tr '.' '/')
+}
+
+creates_project_structure() {
+  echo "Create project directory"
+  MAIN_DIR=Creativity/Code
+  mkdir -p ~/"$MAIN_DIR"/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR.$ARTIFACTID_DIR",resources}
+}
 
 # change dir to project dir
-echo "Try to open $ARTIFACTID directory."
-cd ~/Kod/"$ARTIFACTID" || exit 1
+opens_dir_directory() {
+  echo "Trying to open $ARTIFACTID directory."
+  cd ~/"$MAIN_DIR"/"$ARTIFACTID" || exit 1
+}
 
-# download .gitignore from gitignore.io
- echo "Download .gitignore"
- wget "https://gitignore.io/api/java,maven,intellij+all" -O ".gitignore"
+downloads_gitignore() {
+  # download .gitignore from gitignore.io
+  echo "Download .gitignore"
+  wget "https://www.toptal.com/developers/gitignore/api/java,maven,intellij+all,vim,visualstudiocode" -O ".gitignore"
+}
 
 # create README.adoc
- echo -e "= About $ARTIFACTID\n\n== Prerequisites\n\n== Running\n\n== What to review?\n" > README.adoc
+creates_readme() {
+  cat <<'EOF' >README.adoc
+= About $ARTIFACTID
 
-# create estymaty.adoc
-# uncomment to use
-# echo -e "# $ARTIFACTID\n\n|Data  |Pesymistyczna|Realistyczna|Optymistyczna|\n:-------------------:|:-------------------:|:-------------------|-------------------:\n|data|opis pesymistyczny|opis realistyczny|opis optymistyczny" > estymaty.md
+== Prerequisites
 
-# download POM.xml from gist.github.com
-# update url in case of change gist
- echo "Download pom.xml"
- wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/8d0453aac1968a3c3f1bff47fc794ce9ba0d5958/pom.xml"
+== Running
+
+== What to review?
+EOF
+}
+
+# TODO param for that
+creates_estimates() {
+  cat <<'EOF' >estimates.adoc
+[cols="1,1,1"]
+|===
+|Pessimistic |Realistic |Optimistic
+
+|TBA
+|TBA
+|TBA
+|===
+EOF
+}
+
+# FIXME: update URL in case of change gist
+downloads_pom() {
+  echo "Download pom.xml"
+  # download POM.xml from gist.github.com
+  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/8d0453aac1968a3c3f1bff47fc794ce9ba0d5958/pom.xml"
+}
 
 # replace groupID and artifactID in pom.xml
- sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
- sed -i "s/#ARTIFACTID/$ARTIFACTID/g" ~+/pom.xml
- sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
+sets_pom() {
+  sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
+  sed -i "s/#ARTIFACTID/$ARTIFACTID/g" ~+/pom.xml
+  sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
+}
 
-# open intellij community edition (snap) with this project in background
- echo "Open IntelliJ"
- intellij-idea-community pom.xml &
+opens_intellij_community() {
+  echo "Open IntelliJ"
+  # open intellij community edition (snap) with this project in background
+  intellij-idea-community pom.xml >/dev/null 2>&1 &
+}
 
-# create initial commit
- echo "Create initial commit"
- git add .
- git commit -m "Initial commit"
- 
-else
- echo "You have to enter exactly 2 args at startup: ARTIFACTID and GROUPID"
- exit 1
-fi
+# initialize git repo && create initial commit
+inits_git_repo() {
+  echo "Initialising Git repo"
+  git init
+}
+
+creates_initial_commit() {
+  echo "Create initial commit"
+  git add .
+  git commit -m "Initial commit"
+}
+
+run() {
+  assigns_input_params "$@"
+  parses_input_params
+  creates_project_structure
+  opens_dir_directory
+  creates_readme
+  creates_estimates
+  downloads_gitignore
+  downloads_pom
+  sets_pom
+  inits_git_repo
+  creates_initial_commit
+  opens_intellij_community
+}
+
+run "$@"
