@@ -33,7 +33,7 @@ parses_input_params() {
 creates_project_structure() {
   echo "Create project directory"
   MAIN_DIR=Creativity/Code
-  mkdir -p ~/"$MAIN_DIR"/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR.$ARTIFACTID_DIR",resources}
+  mkdir -p ~/"$MAIN_DIR"/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR"/"$ARTIFACTID_DIR",resources}
 }
 
 # change dir to project dir
@@ -79,14 +79,15 @@ EOF
 downloads_pom() {
   echo "Download pom.xml"
   # download POM.xml from gist.github.com
-  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/8d0453aac1968a3c3f1bff47fc794ce9ba0d5958/pom.xml"
+  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/140dfa5c41f8b1952f3fef8e74143abdc6916af9/pom.xml"
 }
 
 # replace groupID and artifactID in pom.xml
 sets_pom() {
-  sed -i "s/#GROUPID/$GROUPID/g" ~+/pom.xml
-  sed -i "s/#ARTIFACTID/$ARTIFACTID/g" ~+/pom.xml
-  sed -i "s/#APP_NAME/$ARTIFACTID/g" ~+/pom.xml
+  sed -i "s/#GROUPID#/$GROUPID/g" ~+/pom.xml
+  sed -i "s/#ARTIFACTID#/$ARTIFACTID/g" ~+/pom.xml
+  sed -i "s/#APP_NAME#/$ARTIFACTID/g" ~+/pom.xml
+  sed -i "s/#FQN#/$GROUPID.$ARTIFACTID_DIR.Main/g" ~+/pom.xml
 }
 
 opens_intellij_community() {
