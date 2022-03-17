@@ -1,28 +1,34 @@
 #!/bin/bash
 
 # TODO:
-# 0. update gist with pom.xml and documentation
-# 1. usage
-# 1.5 param for destiantion
-# 2. param for estimates
-# 3. param for remote repo - if tying to GitLab 'git push' creates remote repo
-# 4. minimal pom and .gitignore in case of lack the connection
-# 5. simple Maven project and option for REST with SpringBoot with https://start.spring.io/
-# 6. adjust naming convention
-# 7. sanitizing artifactId and groupId
-# 8. param for URL in pom.xml (maybe connected with point 3)
-# 9. param for project's description
-# 10. better versioning
-# 11. man page
-# 12. docker
-# 13. gitlab-ci
-# 14. maybe interactive version
-# 15. default main and test class
-# 16 run.sh
+# [X] 0. update gist with pom.xml
+# [ ] 0.5 update/create documentation
+# [ ] 1. usage
+# [x] 1.5 param for destination
+# [x] 2. param for estimates
+# [ ] 3. param for remote repo - if tidying to GitLab 'git push' creates remote repo
+# [ ] 4. minimal pom and .gitignore in case of lack the connection
+# [ ] 5. simple Maven project and option for REST with SpringBoot with https://start.spring.io/
+# [ ] 6. adjust naming convention
+# [ ] 7. sanitizing artifactId and groupId
+# [ ] 8. param for URL in pom.xml (maybe connected with point 3)
+# [ ] 9. param for project's description
+# [x] 10. better versioning for the project
+# [ ] 11. man page
+# [ ] 12. docker
+# [ ] 13. gitlab-ci
+# [ ] 14. maybe interactive version
+# [x] 15. default main and test class
+# [x] 16 run.sh
+# [ ] FIXME: how skip parameter and use the default value?
 
 assigns_input_params() {
-  ARTIFACTID="${1:-new-project}"
-  GROUPID="${2:-com.github.marcinogo}"
+  MAIN_DESTINATION="${1:-Creativity/Code}"
+  ARTIFACTID="${2:-new-project}"
+  GROUPID="${3:-com.github.marcinogo}"
+
+
+  CREATE_ESTIMATES="${4:-false}"
 }
 
 parses_input_params() {
@@ -31,15 +37,46 @@ parses_input_params() {
 }
 
 creates_project_structure() {
-  echo "Create project directory"
-  MAIN_DIR=Creativity/Code
-  mkdir -p ~/"$MAIN_DIR"/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR"/"$ARTIFACTID_DIR",resources}
+  echo "Create project directories"
+  mkdir -p ~/"$MAIN_DESTINATION"/"$ARTIFACTID"/src/{main,test}/{java/"$GROUPID_DIR"/"$ARTIFACTID_DIR",resources}
+}
+
+creates_main_class() {
+  FILE_DESTINATION=~/"$MAIN_DESTINATION"/"$ARTIFACTID"/src/main/java/"$GROUPID_DIR"/"$ARTIFACTID_DIR"/Main.java
+  cat << EOF > "$FILE_DESTINATION"
+  package $GROUPID.$ARTIFACTID_DIR;
+
+  /**
+   * @author Marcin Ogorzalek
+   */
+  class Main {
+      public static void main(String[] args) {
+          System.out.println("Hello World");
+      }
+  }
+EOF
+}
+
+creates_test_class() {
+  FILE_DESTINATION=~/"$MAIN_DESTINATION"/"$ARTIFACTID"/src/test/java/"$GROUPID_DIR"/"$ARTIFACTID_DIR"/MainTest.java
+cat << EOF > "$FILE_DESTINATION"
+  package $GROUPID.$ARTIFACTID_DIR;
+
+  import static org.testng.Assert.*;
+
+  public class MainTest {
+
+      public void failedTest() {
+          fail();
+      }
+  }
+EOF
 }
 
 # change dir to project dir
 opens_dir_directory() {
   echo "Trying to open $ARTIFACTID directory."
-  cd ~/"$MAIN_DIR"/"$ARTIFACTID" || exit 1
+  cd ~/"$MAIN_DESTINATION"/"$ARTIFACTID" || exit 1
 }
 
 downloads_gitignore() {
@@ -50,7 +87,7 @@ downloads_gitignore() {
 
 # create README.adoc
 creates_readme() {
-  cat <<'EOF' >README.adoc
+  cat << EOF >README.adoc
 = About $ARTIFACTID
 
 == Prerequisites
@@ -61,9 +98,8 @@ creates_readme() {
 EOF
 }
 
-# TODO param for that
 creates_estimates() {
-  cat <<'EOF' >estimates.adoc
+  cat << 'EOF' >estimates.adoc
 [cols="1,1,1"]
 |===
 |Pessimistic |Realistic |Optimistic
@@ -79,7 +115,7 @@ EOF
 downloads_pom() {
   echo "Download pom.xml"
   # download POM.xml from gist.github.com
-  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/140dfa5c41f8b1952f3fef8e74143abdc6916af9/pom.xml"
+  wget "https://gist.githubusercontent.com/marcinogo/5e68afb858f5fc5c8e599f98ecb1cf89/raw/140dfa5c41f8b1952f3fef8e74143abdc6916af9/pom.xml" -O "pom.xml"
 }
 
 # replace groupID and artifactID in pom.xml
@@ -88,6 +124,14 @@ sets_pom() {
   sed -i "s/#ARTIFACTID#/$ARTIFACTID/g" ~+/pom.xml
   sed -i "s/#APP_NAME#/$ARTIFACTID/g" ~+/pom.xml
   sed -i "s/#FQN#/$GROUPID.$ARTIFACTID_DIR.Main/g" ~+/pom.xml
+}
+
+creates_run_script() {
+  cat << EOF > run.sh
+  mvn clean target
+  java -jar target/$ARTIFACTID-0.0.1.jar
+EOF
+  chmod +x run.sh
 }
 
 opens_intellij_community() {
@@ -112,12 +156,17 @@ run() {
   assigns_input_params "$@"
   parses_input_params
   creates_project_structure
+  creates_main_class
+  creates_test_class
   opens_dir_directory
   creates_readme
-  creates_estimates
+  if [ "$CREATE_ESTIMATES" = true ]; then
+    creates_estimates
+  fi
   downloads_gitignore
   downloads_pom
   sets_pom
+  creates_run_script
   inits_git_repo
   creates_initial_commit
   opens_intellij_community
