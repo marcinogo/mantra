@@ -128,6 +128,7 @@ sets_pom() {
 
 creates_run_script() {
   cat << EOF > run.sh
+  #!/usr/bin/env bash
   mvn clean target
   java -jar target/$ARTIFACTID-0.0.1.jar
 EOF
