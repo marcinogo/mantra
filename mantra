@@ -44,32 +44,36 @@ creates_project_structure() {
 creates_main_class() {
   FILE_DESTINATION=~/"$MAIN_DESTINATION"/"$ARTIFACTID"/src/main/java/"$GROUPID_DIR"/"$ARTIFACTID_DIR"/Main.java
   cat << EOF > "$FILE_DESTINATION"
-  package $GROUPID.$ARTIFACTID_DIR;
+package $GROUPID.$ARTIFACTID_DIR;
 
-  /**
-   * @author Marcin Ogorzalek
-   */
-  class Main {
-      public static void main(String[] args) {
-          System.out.println("Hello World");
-      }
-  }
+/**
+ * @author Marcin Ogorzalek
+ */
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}
+
 EOF
 }
 
 creates_test_class() {
   FILE_DESTINATION=~/"$MAIN_DESTINATION"/"$ARTIFACTID"/src/test/java/"$GROUPID_DIR"/"$ARTIFACTID_DIR"/MainTest.java
 cat << EOF > "$FILE_DESTINATION"
-  package $GROUPID.$ARTIFACTID_DIR;
+package $GROUPID.$ARTIFACTID_DIR;
 
-  import static org.testng.Assert.*;
+import org.testng.SkipException;
+import org.testng.annotations.Test;
 
-  public class MainTest {
 
-      public void failedTest() {
-          fail();
-      }
-  }
+public class MainTest {
+    @Test
+    public void failedTest() {
+        throw new SkipException("Skipping initial test. Not ready for execution ");
+    }
+}
+
 EOF
 }
 
