@@ -26,7 +26,7 @@
         <maven.resources.encoding>${project.build.sourceEncoding}</maven.resources.encoding>
 
         <!-- dependency versions should go here, so below they can be omitted -->
-        <version.dependency.testng>7.5</version.dependency.testng>
+        <version.dependency.testng>7.7.0</version.dependency.testng>
         <version.dependency.tinylog.api>2.4.1</version.dependency.tinylog.api>
         <version.dependency.tinylog.impl>2.4.1</version.dependency.tinylog.impl>
 
